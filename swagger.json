@@ -1,0 +1,93 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "API de Autenticação",
+      "description": "API simples para autenticação com JWT"
+    },
+    "host": "localhost:5000",
+    "basePath": "/api",
+    "schemes": ["http"],
+    "paths": {
+      "/login": {
+        "post": {
+          "summary": "Autenticação de Usuário",
+          "description": "Autentica o usuário e retorna um token JWT.",
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "admin"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password"
+                  }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Sucesso",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5..."
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Credenciais inválidas"
+            }
+          }
+        }
+      },
+      "/protected": {
+        "get": {
+          "summary": "Acesso Protegido",
+          "description": "Retorna dados apenas para usuários autenticados.",
+          "parameters": [
+            {
+              "in": "header",
+              "name": "Authorization",
+              "required": true,
+              "type": "string",
+              "description": "Token JWT no formato Bearer {token}"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Sucesso",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "Bem-vindo, admin! Esta é uma rota protegida."
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Token não fornecido"
+            },
+            "403": {
+              "description": "Token inválido ou expirado"
+            }
+          }
+        }
+      }
+    }
+  }
+  
